@@ -45,9 +45,6 @@ class RelatednessRequest(object):
         self.score_function = score_function
         self.pairs = list()
 
-    def add(self, pair):
-        self.pairs.append(pair)
-
     @property
     def payload(self):
         return dict(corpus=self.corpus, model=self.model, language=self.language,
