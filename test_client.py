@@ -24,8 +24,9 @@
 
 
 import unittest
+import json
 
-from indra.client import RelatednessRequest, IndraClient
+from indra.client import RelatednessRequest, RelatednessResponse, IndraClient
 
 
 class RelatednessTest(unittest.TestCase):
@@ -38,3 +39,47 @@ class RelatednessTest(unittest.TestCase):
         request.pairs.extend([("love", "hate"), ("love", "peace"), ("love", "sex")])
         response = self.client.relatedness(request)
         print(response)
+
+
+class ResponseAPITest(unittest.TestCase):
+
+    def setUp(self):
+        self.response = RelatednessResponse(json.loads("""{
+            "corpus": "wiki-2014",
+            "model": "W2V",
+            "scoreFunction": "COSINE",
+            "language": "EN",
+    
+            "pairs": [{
+                "t1": "love",
+                "t2": "hate",
+                "score": 0.58
+            }, {
+                "t1": "love",
+                "t2": "sex",
+                "score": 0.31
+            }, {
+                "t1": "love",
+                "t2": "peace",
+                "score": 0.098
+            }]
+        }
+        """))
+
+    def test_relatedness_response0(self):
+        self.assertEqual(self.response.getscore(),
+                         [{'t2': 'hate', 't1': 'love', 'score': 0.58},
+                          {'t2': 'sex', 't1': 'love', 'score': 0.31},
+                          {'t2': 'peace', 't1': 'love', 'score': 0.098}])
+
+    def test_relatedness_response1(self):
+        self.assertEqual(self.response.getscore(t1='love'), {'sex': 0.31, 'hate': 0.58, 'peace': 0.098})
+
+    def test_relatedness_response2(self):
+        self.assertEqual(self.response.getscore('unknown'), {})
+
+    def test_relatedness_response3(self):
+        self.assertEqual(self.response.getscore(t2='love'), {})
+
+    def test_relatedness_response4(self):
+        self.assertEqual(self.response.getscore(t2='peace'), {'love': 0.098})

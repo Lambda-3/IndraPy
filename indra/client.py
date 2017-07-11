@@ -54,6 +54,20 @@ class RelatednessRequest(object):
                     scoreFunction=self.score_function, pairs=[dict(t1=t1, t2=t2) for t1, t2 in self.pairs])
 
 
+class RelatednessResponse(object):
+
+    def __init__(self, response_dict):
+        self.__response_dict = response_dict
+
+    def getscore(self, t1=None, t2=None):
+        if t1 is None and t2 is None:
+            return self.__response_dict['pairs']
+        if t1 is None:
+            return {p['t1']: p['score'] for p in self.__response_dict['pairs'] if p['t2'] == t2}
+        if t2 is None:
+            return {p['t2']: p['score'] for p in self.__response_dict['pairs'] if p['t1'] == t1}
+
+
 class IndraClient(object):
     public_endpoint = 'http://indra.lambda3.org'
     headers = {'User-Agent': "IndraClient/{}".format(indra_client_version)}
