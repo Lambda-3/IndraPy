@@ -22,37 +22,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
 
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
+import unittest
 
-with open('VERSION.txt') as f:
-    version = f.read().splitlines()[0]
+from indra.client import RelatednessRequest, IndraClient
 
 
-setup(
-    name="indrapy",
-    version=version,
-    author="Leonardo Souza",
-    author_email="leonardossz@gmail.com",
-    description="Official Indra Python Client",
-    packages=['indra'],
-    platforms=['any'],
-    install_requires=requirements,
-    entry_points={
-        'console_scripts': [
-            'indrapy = indra.client:main'
-        ]
-    },
-    classifiers=['Development Status :: 4 - Beta',
-                 'Intended Audience :: Developers',
-                 'Topic :: Software Development :: Libraries',
-                 'Programming Language :: Python :: 3',
-                 'Environment :: Console'],
-    keywords='Official Client API for Indra',
-    use_2to3=False
-)
+class RelatednessTest(unittest.TestCase):
+
+    def setUp(self):
+        self.client = IndraClient()
+
+    def test_simple_call(self):
+        request = RelatednessRequest()
+        request.pairs.extend([("love", "hate"), ("love", "peace"), ("love", "sex")])
+        response = self.client.relatedness(request)
+        print(response)

@@ -22,6 +22,55 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import requests
+import logging
+
+from indra import __version__ as indra_client_version
+
+
+logger = logging.getLogger(__name__)
+
+
+class RelatednessRequest(object):
+
+    def __init__(self,
+                 model='W2V',
+                 language='EN',
+                 corpus='wiki-2014',
+                 score_function='COSINE'):
+
+        self.model = model
+        self.language = language
+        self.corpus = corpus
+        self.score_function = score_function
+        self.pairs = list()
+
+    def add(self, pair):
+        self.pairs.append(pair)
+
+    @property
+    def payload(self):
+        return dict(corpus=self.corpus, model=self.model, language=self.language,
+                    scoreFunction=self.score_function, pairs=[dict(t1=t1, t2=t2) for t1, t2 in self.pairs])
+
+
+class IndraClient(object):
+    public_endpoint = 'http://indra.lambda3.org'
+    headers = {'User-Agent': "IndraClient/{}".format(indra_client_version)}
+
+    def __init__(self, base_url=public_endpoint):
+        self.__baseurl = base_url
+        if base_url == self.public_endpoint:
+            logger.warning("Using PUBLIC server @ %s, don't use in production.", base_url)
+        else:
+            logger.info("Indra Server @ %s", base_url)
+
+    def relatedness(self, request):
+        url = "{}/relatedness".format(self.__baseurl)
+        res = requests.post(url, json=request.payload)
+        res.raise_for_status()
+        return res.json()
+
 
 def main():
     print("Hello World")
