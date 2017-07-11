@@ -53,6 +53,7 @@ setup(
                  'Topic :: Software Development :: Libraries',
                  'Programming Language :: Python :: 3',
                  'Environment :: Console'],
-    keywords='Official Client API for Indra',
+    keywords=['Indra', 'Distributional Semantics', 'Machine Learning', 'Vector Space'],
+    url='https://github.com/Lambda-3/IndraPy',
     use_2to3=False
 )
