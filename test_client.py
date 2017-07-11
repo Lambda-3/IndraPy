@@ -41,7 +41,7 @@ class RelatednessTest(unittest.TestCase):
         self.assertAlmostEqual(response.getscore('love', 'hate'), 0.59, places=2)
 
 
-class ResponseAPITest(unittest.TestCase):
+class APITest(unittest.TestCase):
 
     def setUp(self):
         self.response = RelatednessResponse(json.loads("""{
