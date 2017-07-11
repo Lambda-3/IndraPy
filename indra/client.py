@@ -60,6 +60,9 @@ class RelatednessResponse(object):
         self.__response_dict = response_dict
 
     def getscore(self, t1=None, t2=None):
+        if t1 is not None and t2 is not None:
+            res = [p['score'] for p in self.__response_dict['pairs'] if p['t1'] == t1 and p['t2'] == t2]
+            return res[0] if res else None
         if t1 is None and t2 is None:
             return self.__response_dict['pairs']
         if t1 is None:
@@ -83,7 +86,7 @@ class IndraClient(object):
         url = "{}/relatedness".format(self.__baseurl)
         res = requests.post(url, json=request.payload)
         res.raise_for_status()
-        return res.json()
+        return RelatednessResponse(res.json())
 
 
 def main():

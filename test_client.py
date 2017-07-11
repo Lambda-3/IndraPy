@@ -38,7 +38,7 @@ class RelatednessTest(unittest.TestCase):
         request = RelatednessRequest()
         request.pairs.extend([("love", "hate"), ("love", "peace"), ("love", "sex")])
         response = self.client.relatedness(request)
-        print(response)
+        self.assertAlmostEqual(response.getscore('love', 'hate'), 0.59, places=2)
 
 
 class ResponseAPITest(unittest.TestCase):
