@@ -87,4 +87,4 @@ class IndraClient(object):
 
 
 def main():
-    print("Hello World")
+    pass  # cmd line interface soon ;)
